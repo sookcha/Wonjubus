@@ -133,20 +133,24 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 4 total pages.
+            return 4;
         }
 
         @Override
+
+
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
+                    return "Favorites";
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+                    return "Station";
                 case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+                    return "Bus";
+                case 3:
+                    return "About";
             }
             return null;
         }
@@ -181,6 +185,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            TextView tv = (TextView) rootView.findViewById(R.id.text);
+            tv.setText(this.getTag() + " Content");
             return rootView;
         }
     }
