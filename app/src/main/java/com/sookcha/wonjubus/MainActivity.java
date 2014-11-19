@@ -1,25 +1,35 @@
 package com.sookcha.wonjubus;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.provider.ContactsContract;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
+    public static int sec = 0;
+    private List<Fragment> mFragments = new Vector<Fragment>();
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,6 +49,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFragments.add(new PlaceholderFragment());
+        mFragments.add(new StationFragment());
+        mFragments.add(new BusSearchFragment());
+        mFragments.add(new SettingsFragment());
+
         setContentView(R.layout.activity_main);
 
         // Set up the action bar.
@@ -108,10 +124,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
     }
 
     /**
@@ -119,6 +137,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -128,7 +147,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            Log.d("Section",String.valueOf(position+1));
+            //return PlaceholderFragment.newInstance(position + 1);
+            return mFragments.get(position);
         }
 
         @Override
@@ -160,6 +181,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -173,20 +195,25 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
+            // = sectionNumber;
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
 
         public PlaceholderFragment() {
+
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView tv = (TextView) rootView.findViewById(R.id.text);
-            tv.setText(this.getTag() + " Content");
+            String[] FRUITS = new String[] { "1", "2", "3", "4", "5", "6", "7"};
+
+            ListView tv = (ListView) rootView.findViewById(R.id.favList);
+
+            tv.setAdapter(new ArrayAdapter<String>(rootView.getContext(), R.layout.fragment_main,R.id.section_label, FRUITS));
             return rootView;
         }
     }

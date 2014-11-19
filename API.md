@@ -5,9 +5,6 @@
 - HTTP/1.1 POST
 - stop_id={정류장 번호}
 
-
-
-
 ## 정류장 지도 정보
 - http://its.wonju.go.kr/map/BusMap.do
 - HTTP/1.1 POST
