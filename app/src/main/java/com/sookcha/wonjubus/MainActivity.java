@@ -29,7 +29,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements ActionBar.TabListener {
     public static int sec = 0;
     private List<Fragment> mFragments = new Vector<Fragment>();
-
+    static MainActivity ma;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -50,8 +50,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ma=this;
+
         mFragments.add(new PlaceholderFragment());
-        mFragments.add(new StationFragment());
+        mFragments.add(new StationSearchFragment());
         mFragments.add(new BusSearchFragment());
         mFragments.add(new SettingsFragment());
 
@@ -147,7 +149,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            Log.d("Section",String.valueOf(position+1));
             //return PlaceholderFragment.newInstance(position + 1);
             return mFragments.get(position);
         }
