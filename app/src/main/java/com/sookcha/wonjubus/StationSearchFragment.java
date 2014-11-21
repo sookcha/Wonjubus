@@ -85,7 +85,7 @@ public class StationSearchFragment extends Fragment {
                 JSONObject e = json.getJSONObject(i);
 
                 map.put("stopName",  e.getString("STOP_SHORTNAME"));
-                map.put("stopNumber", e.getString("LINK_ID"));
+                map.put("stopNumber", e.getString("STOP_ID"));
 
                 mapList.add(map);
             }

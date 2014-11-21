@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Tab underline -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/orange" />
+        </shape>
+    </item>
+    <!-- Tab background (in pressed state) -->
+    <item android:bottom="@color/orange">
+        <shape android:shape="rectangle" >
+            <gradient
+                    android:startColor="@color/orange"
+                    android:endColor="@color/orange"
+                    android:angle="270" />
+        </shape>
+    </item>
+</layer-list>
