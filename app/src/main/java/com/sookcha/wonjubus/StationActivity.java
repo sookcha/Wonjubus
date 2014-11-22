@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -39,6 +37,7 @@ public class StationActivity extends Activity {
     ArrayList<HashMap<String, String>> mapList;
     SimpleAdapter adapter;
     SQLiteHelper db = new SQLiteHelper(this);
+    ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,9 @@ public class StationActivity extends Activity {
         Intent intent = getIntent();
         TextView stationName = (TextView)findViewById(R.id.stopName);
         TextView stopNumber = (TextView)findViewById(R.id.stopNumber);
+        spinner = (ProgressBar)findViewById(R.id.progressBar2);
+        spinner.setVisibility(View.GONE);
+
 
         hashMap = (HashMap<String, String>)intent.getSerializableExtra("stop-information");
         stationName.setText(hashMap.get("stopName"));
@@ -68,7 +70,10 @@ public class StationActivity extends Activity {
     }
 
     private class getStationInfo extends AsyncTask<URL, Integer, Integer> {
-        protected Integer doInBackground(URL... params) {
+        protected void onPreExecute() {
+            spinner.setVisibility(View.VISIBLE);
+        }
+            protected Integer doInBackground(URL... params) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost("http://its.wonju.go.kr/map/AjaxRouteListByStop.do");
             List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(1);
@@ -79,6 +84,11 @@ public class StationActivity extends Activity {
                 response = httpClient.execute(httpPost);
                 responseString = new BasicResponseHandler().handleResponse(response);
             } catch (IOException e) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(MainActivity.ma.getBaseContext(),"에러발생",Toast.LENGTH_SHORT).show();
+                    }
+                });
                 e.printStackTrace();
             }
 
@@ -92,6 +102,7 @@ public class StationActivity extends Activity {
 
         protected void onPostExecute(Integer result) {
             if (responseString != null) {
+                spinner.setVisibility(View.GONE);
                 org.jsoup.nodes.Document responseDocument = Jsoup.parse(responseString);
                 Elements elems = responseDocument.select("tr");
                 String s[] = new String[elems.size()];
@@ -139,8 +150,10 @@ public class StationActivity extends Activity {
 
         if (id == R.id.action_favorite) {
             Toast.makeText(getBaseContext(),text.getText(),Toast.LENGTH_LONG).show();
-            db.addFavorite(new Favorites(text.getText().toString(), Integer.parseInt(stationNumber.getText().toString())));
-            addToFavorites();
+            db.addFavorite(new Favorites(text.getText().toString(),
+                    Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")),
+                    stationNumber.getText().toString().split("-")[1], "0", "0"));
+
             db.getAllFavorites();
         }
 

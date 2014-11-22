@@ -24,6 +24,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_NUMBER = "number";
+    private static final String KEY_LOCATION = "location";
+    private static final String KEY_LOCATIONLAT = "locationLAT";
+    private static final String KEY_LOCATIONLNG = "locationLNG";
 
     private static final String[] COLUMNS = {KEY_ID,KEY_NAME,KEY_NUMBER};
 
@@ -35,7 +38,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_BOOK_TABLE = "CREATE TABLE favorites ( " +
         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-        "name TEXT, "+"number INTEGER )";
+        "name TEXT, "+"number INTEGER, " + "location TEXT, " + "locationLAT TEXT, " + "locationLNG TEXT" + " )";
 
         db.execSQL(CREATE_BOOK_TABLE);
     }
@@ -49,8 +52,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, favorite.name); // get title
-        values.put(KEY_NUMBER, favorite.number); // get author
+        values.put(KEY_NAME, favorite.name);
+        values.put(KEY_NUMBER, favorite.number);
+        values.put(KEY_LOCATION, favorite.location);
+        values.put(KEY_LOCATIONLAT, favorite.locationLAT);
+        values.put(KEY_LOCATIONLNG, favorite.locationLNG);
         db.insert(TABLE_FAVORITES, null,values);
         db.close();
     }
@@ -67,6 +73,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         favorite.name = cursor.getString(1);
         favorite.number = Integer.parseInt(cursor.getString(2));
 
+
         return favorite;
     }
 
@@ -82,6 +89,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 favorite.id = (Integer.parseInt(cursor.getString(0)));
                 favorite.name = (cursor.getString(1));
                 favorite.number = Integer.parseInt(cursor.getString(2));
+                favorite.location = cursor.getString(3);
+
                 favorites.add(favorite);
                 } while (cursor.moveToNext());
             }

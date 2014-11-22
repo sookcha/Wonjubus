@@ -28,6 +28,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     public static int sec = 0;
     private List<Fragment> mFragments = new Vector<Fragment>();
     static MainActivity ma;
+    public SimpleAdapter adapter;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -55,8 +57,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         mFragments.add(new StationSearchFragment());
         mFragments.add(new BusSearchFragment());
         mFragments.add(new SettingsFragment());
-
-
 
         setContentView(R.layout.activity_main);
 
@@ -217,6 +217,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
             List<Favorites> favList = db.getAllFavorites();
 
+
             ArrayList<HashMap<String, String>> mapList = new ArrayList<HashMap<String,String>>();
 
             for(int i=0; i<favList.size(); i++){
@@ -224,8 +225,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
                 map.put("stopName",  favList.get(i).name);
                 map.put("stopNumber", favList.get(i).number.toString());
+                map.put("location", favList.get(i).location);
                 /*
-                map.put("location", map.get("REMARK"));
                 map.put("location-lat", map.get("LAT"));
                 map.put("location-lng", map.get("LNG"));
                 */
