@@ -19,15 +19,24 @@
             android:text="Large Text"
             android:id="@+id/stopName" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
             android:textSize="30dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/stopNumber" android:layout_below="@+id/stopName" android:layout_alignParentLeft="true"
+            android:textColor="@color/gray"/>
 
     <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_below="@+id/space" android:layout_centerHorizontal="true" android:id="@+id/space2"/>
+            android:layout_height="10dp"
+            android:id="@+id/space2"
+            android:layout_below="@+id/stopNumber" android:layout_alignParentLeft="true"/>
+
     <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stationTimeList"
-            android:layout_alignParentLeft="true" android:layout_below="@+id/space2"/>
+            android:layout_alignParentRight="true" android:layout_below="@+id/space2"
+            android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

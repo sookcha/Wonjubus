@@ -1,14 +1,14 @@
 package com.sookcha.wonjubus;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
+import java.util.*;
 
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
@@ -20,10 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
+import android.widget.*;
+import org.json.JSONObject;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -46,6 +44,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
      */
     ViewPager mViewPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +55,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         mFragments.add(new StationSearchFragment());
         mFragments.add(new BusSearchFragment());
         mFragments.add(new SettingsFragment());
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -209,12 +210,50 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            String[] FRUITS = new String[] { "1", "2", "3", "4", "5", "6", "7"};
 
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            SQLiteHelper db = new SQLiteHelper(rootView.getContext());
             ListView tv = (ListView) rootView.findViewById(R.id.favList);
 
-            tv.setAdapter(new ArrayAdapter<String>(rootView.getContext(), R.layout.fragment_main,R.id.section_label, FRUITS));
+            List<Favorites> favList = db.getAllFavorites();
+
+            ArrayList<HashMap<String, String>> mapList = new ArrayList<HashMap<String,String>>();
+
+            for(int i=0; i<favList.size(); i++){
+                HashMap<String, String> map = new HashMap<String, String>();
+
+                map.put("stopName",  favList.get(i).name);
+                map.put("stopNumber", favList.get(i).number.toString());
+                /*
+                map.put("location", map.get("REMARK"));
+                map.put("location-lat", map.get("LAT"));
+                map.put("location-lng", map.get("LNG"));
+                */
+
+                mapList.add(map);
+            }
+            int[] listViewText={R.id.nameText};
+
+            SimpleAdapter adapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"stopName"},listViewText);
+            tv.setAdapter(adapter);
+
+
+            //tv.setAdapter(new ArrayAdapter<Favorites>(rootView.getContext(), R.layout.fragment_main,R.id.section_label, db.getAllFavorites()));
+
+            tv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Object item = parent.getItemAtPosition(position);
+                    HashMap<String , String> data;
+
+                    data = (HashMap<String , String>) item;
+                    Intent intent = new Intent(MainActivity.ma.getBaseContext(), StationActivity.class);
+                    intent.putExtra("stop-information", data);
+                    startActivity(intent);
+                }
+            });
+
+
             return rootView;
         }
     }

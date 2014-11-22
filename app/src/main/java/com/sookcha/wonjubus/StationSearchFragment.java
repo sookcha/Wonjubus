@@ -86,6 +86,9 @@ public class StationSearchFragment extends Fragment {
 
                 map.put("stopName",  e.getString("STOP_SHORTNAME"));
                 map.put("stopNumber", e.getString("STOP_ID"));
+                map.put("location", e.getString("REMARK"));
+                map.put("location-lat", e.getString("LAT"));
+                map.put("location-lng", e.getString("LNG"));
 
                 mapList.add(map);
             }
