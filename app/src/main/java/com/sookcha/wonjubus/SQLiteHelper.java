@@ -64,7 +64,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public Favorites getFavorite(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_FAVORITES, COLUMNS, " id = ?", new String[] { String.valueOf(id) }, // d. selections args
-        null, null,null,null);
+                null, null,null,null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
@@ -73,9 +73,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         favorite.name = cursor.getString(1);
         favorite.number = Integer.parseInt(cursor.getString(2));
 
-
         return favorite;
     }
+
+    public boolean isExist(Integer number){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_FAVORITES, COLUMNS, " number = ?", new String[] { String.valueOf(number) }, // d. selections args
+                null, null,null,null);
+        if (cursor.getCount() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 
     public List<Favorites> getAllFavorites() {
         List<Favorites> favorites = new LinkedList<Favorites>();
@@ -96,6 +107,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             }
         return favorites;
         }
+
+    public void deleteFavorite(String favorite) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_FAVORITES, KEY_NUMBER + " = ?",new String[] { String.valueOf(favorite) });
+        db.close();
+    }
 
     public int updateFavorite(Favorites favorite) {
         SQLiteDatabase db = this.getWritableDatabase();

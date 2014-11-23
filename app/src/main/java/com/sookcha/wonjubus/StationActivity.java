@@ -33,7 +33,8 @@ public class StationActivity extends Activity {
     HashMap<String, String> hashMap;
     String responseString;
     HttpResponse response;
-    HashMap<String, String> map = new HashMap<String, String>();;
+    HashMap<String, String> map = new HashMap<String, String>();
+    ;
     ArrayList<HashMap<String, String>> mapList;
     SimpleAdapter adapter;
     SQLiteHelper db = new SQLiteHelper(this);
@@ -48,23 +49,23 @@ public class StationActivity extends Activity {
         getActionBar().setTitle("정류장 정보");
 
         Intent intent = getIntent();
-        TextView stationName = (TextView)findViewById(R.id.stopName);
-        TextView stopNumber = (TextView)findViewById(R.id.stopNumber);
-        spinner = (ProgressBar)findViewById(R.id.progressBar2);
+        TextView stationName = (TextView) findViewById(R.id.stopName);
+        TextView stopNumber = (TextView) findViewById(R.id.stopNumber);
+        spinner = (ProgressBar) findViewById(R.id.progressBar2);
         spinner.setVisibility(View.GONE);
 
 
-        hashMap = (HashMap<String, String>)intent.getSerializableExtra("stop-information");
+        hashMap = (HashMap<String, String>) intent.getSerializableExtra("stop-information");
         stationName.setText(hashMap.get("stopName"));
         stopNumber.setText(hashMap.get("stopNumber") + " - " + hashMap.get("location"));
 
-        new getStationInfo().execute(null,null,null);
+        new getStationInfo().execute(null, null, null);
 
         ListView station = (ListView) findViewById(R.id.stationTimeList);
-        mapList = new ArrayList<HashMap<String,String>>();
+        mapList = new ArrayList<HashMap<String, String>>();
 
-        int[] listViewText={R.id.nameText,R.id.timeText};
-        adapter = new SimpleAdapter(getBaseContext(),mapList,R.layout.station_time_list_item,new String[]{"stopName","stopInfo"},listViewText);
+        int[] listViewText = {R.id.nameText, R.id.timeText};
+        adapter = new SimpleAdapter(getBaseContext(), mapList, R.layout.station_time_list_item, new String[]{"stopName", "stopInfo"}, listViewText);
 
         station.setAdapter(adapter);
     }
@@ -73,7 +74,8 @@ public class StationActivity extends Activity {
         protected void onPreExecute() {
             spinner.setVisibility(View.VISIBLE);
         }
-            protected Integer doInBackground(URL... params) {
+
+        protected Integer doInBackground(URL... params) {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost("http://its.wonju.go.kr/map/AjaxRouteListByStop.do");
             List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(1);
@@ -86,7 +88,7 @@ public class StationActivity extends Activity {
             } catch (IOException e) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(MainActivity.ma.getBaseContext(),"에러발생",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.ma.getBaseContext(), "에러발생", Toast.LENGTH_SHORT).show();
                     }
                 });
                 e.printStackTrace();
@@ -96,7 +98,7 @@ public class StationActivity extends Activity {
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            Log.i("PROGRESSINGG!!!",progress[0].toString());
+            Log.i("PROGRESSINGG!!!", progress[0].toString());
         }
 
 
@@ -115,7 +117,7 @@ public class StationActivity extends Activity {
                     if (timeInfo.length > 4) {
                         map.put("stopInfo", timeInfo[3] + timeInfo[4] + " / " + timeInfo[1] + " 정거장 전");
                     } else if (timeInfo.length > 3) {
-                        map.put("stopInfo", timeInfo[1] + " " +timeInfo[2]);
+                        map.put("stopInfo", timeInfo[1] + " " + timeInfo[2]);
                     } else {
                         map.put("stopInfo", el.text().split("[원주]")[2].replace("]", ""));
                     }
@@ -149,14 +151,17 @@ public class StationActivity extends Activity {
         TextView stationNumber = (TextView) findViewById(R.id.stopNumber);
 
         if (id == R.id.action_favorite) {
-            Toast.makeText(getBaseContext(),text.getText(),Toast.LENGTH_LONG).show();
-            db.addFavorite(new Favorites(text.getText().toString(),
-                    Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")),
-                    stationNumber.getText().toString().split("-")[1], "0", "0"));
 
-            db.getAllFavorites();
+            if (!db.isExist(Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")))) {
+                Toast.makeText(getBaseContext(), text.getText() + " 정류장이 즐겨찾기에 추가되었습니다", Toast.LENGTH_LONG).show();
+
+                db.addFavorite(new Favorites(text.getText().toString(),
+                        Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")),
+                        stationNumber.getText().toString().split("-")[1], "0", "0"));
+            }
+
+            return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 }

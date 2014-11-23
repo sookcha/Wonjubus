@@ -8,27 +8,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
-import org.json.JSONObject;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
     public static int sec = 0;
     private List<Fragment> mFragments = new Vector<Fragment>();
     static MainActivity ma;
-    public SimpleAdapter adapter;
+    public static SimpleAdapter favoriteAdapter;
+    public static ListView tv;
+    public static ArrayList mapList;
 
 
     /**
@@ -52,6 +45,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         super.onCreate(savedInstanceState);
 
         ma=this;
+
+
 
         mFragments.add(new PlaceholderFragment());
         mFragments.add(new StationSearchFragment());
@@ -110,10 +105,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -208,18 +199,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public void onResume() {
+            super.onResume();
+            mapList.clear();
 
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            SQLiteHelper db = new SQLiteHelper(rootView.getContext());
-            ListView tv = (ListView) rootView.findViewById(R.id.favList);
-
+            SQLiteHelper db = new SQLiteHelper(MainActivity.ma.getBaseContext());
             List<Favorites> favList = db.getAllFavorites();
-
-
-            ArrayList<HashMap<String, String>> mapList = new ArrayList<HashMap<String,String>>();
-
             for(int i=0; i<favList.size(); i++){
                 HashMap<String, String> map = new HashMap<String, String>();
 
@@ -233,21 +218,93 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
                 mapList.add(map);
             }
+
+            favoriteAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v,
+                                        ContextMenu.ContextMenuInfo menuInfo) {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            MenuInflater inflater = getActivity().getMenuInflater();
+            inflater.inflate(R.menu.favorite_menu, menu);
+        }
+
+        @Override
+        public boolean onContextItemSelected(MenuItem item) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            SQLiteHelper db = new SQLiteHelper(MainActivity.ma.getBaseContext());
+
+            switch (item.getItemId()) {
+                case R.id.action_remove:
+                    HashMap<String, String> map = (HashMap<String, String>) mapList.get(((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).position);
+                    db.deleteFavorite(map.get("stopNumber"));
+
+                    mapList.clear();
+
+                    List<Favorites> favList = db.getAllFavorites();
+                    for(int i=0; i<favList.size(); i++){
+                        HashMap<String, String> mapA = new HashMap<String, String>();
+
+                        mapA.put("stopName",  favList.get(i).name);
+                        mapA.put("stopNumber", favList.get(i).number.toString());
+                        mapA.put("location", favList.get(i).location);
+                        /*
+                        map.put("location-lat", map.get("LAT"));
+                        map.put("location-lng", map.get("LNG"));
+                        */
+                        mapList.add(mapA);
+                    }
+                    favoriteAdapter.notifyDataSetChanged();
+
+
+                    return true;
+                default:
+                    return super.onContextItemSelected(item);
+            }
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            SQLiteHelper db = new SQLiteHelper(rootView.getContext());
+            tv = (ListView) rootView.findViewById(R.id.favList);
+
+            List<Favorites> favList = db.getAllFavorites();
+
+
+            mapList = new ArrayList<HashMap<String,String>>();
+
+            for(int i=0; i<favList.size(); i++){
+                HashMap<String, String> map = new HashMap<String, String>();
+
+                map.put("id", String.valueOf(favList.get(i).id));
+                map.put("stopName",  favList.get(i).name);
+                map.put("stopNumber", favList.get(i).number.toString());
+                map.put("location", favList.get(i).location);
+                /*
+                map.put("location-lat", map.get("LAT"));
+                map.put("location-lng", map.get("LNG"));
+                */
+
+                mapList.add(map);
+            }
             int[] listViewText={R.id.nameText};
 
-            SimpleAdapter adapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"stopName"},listViewText);
-            tv.setAdapter(adapter);
+            favoriteAdapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"stopName"},listViewText);
+            registerForContextMenu(tv);
+            tv.setAdapter(favoriteAdapter);
 
-
-            //tv.setAdapter(new ArrayAdapter<Favorites>(rootView.getContext(), R.layout.fragment_main,R.id.section_label, db.getAllFavorites()));
 
             tv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Object item = parent.getItemAtPosition(position);
-                    HashMap<String , String> data;
+                    HashMap<String, String> data;
 
-                    data = (HashMap<String , String>) item;
+                    data = (HashMap<String, String>) item;
                     Intent intent = new Intent(MainActivity.ma.getBaseContext(), StationActivity.class);
                     intent.putExtra("stop-information", data);
                     startActivity(intent);
