@@ -16,7 +16,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/timeText" android:textColor="#000000" android:textSize="15dp"
+            android:id="@+id/timeText" android:textColor="@color/deep_orange_A700" android:textSize="15dp"
             android:layout_marginLeft="15dp"/>
 
     <Space

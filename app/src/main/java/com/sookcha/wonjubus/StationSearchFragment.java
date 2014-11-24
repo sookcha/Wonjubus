@@ -68,15 +68,15 @@ public class StationSearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.station_main, container, false);
+        View rootView = inflater.inflate(R.layout.bus_search, container, false);
 
-        ListView stationList = (ListView) rootView.findViewById(R.id.listView);
-        final TextView searchBox = (TextView) rootView.findViewById(R.id.editText);
+        ListView stationList = (ListView) rootView.findViewById(R.id.busListView);
+        final TextView searchBox = (TextView) rootView.findViewById(R.id.busSearchTextView);
         ArrayList<HashMap<String, String>> mapList = new ArrayList<HashMap<String,String>>();
 
         try {
             Context c = MainActivity.ma.getApplicationContext();
-            String jsonLocation = AssetJSONFile("res/stationList.txt", c);
+            String jsonLocation = AssetJSONFile("res/stationList.json", c);
             JSONArray json = new JSONArray(jsonLocation);
 
             for(int i=0;i<json.length();i++){
