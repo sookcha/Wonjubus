@@ -69,10 +69,10 @@ public class BusSearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.station_main, container, false);
+        View rootView = inflater.inflate(R.layout.bus_search, container, false);
 
-        ListView stationList = (ListView) rootView.findViewById(R.id.listView);
-        final TextView searchBox = (TextView) rootView.findViewById(R.id.editText);
+        ListView stationList = (ListView) rootView.findViewById(R.id.busListView);
+        final TextView searchBox = (TextView) rootView.findViewById(R.id.busSearchTextView);
         ArrayList<HashMap<String, String>> mapList = new ArrayList<HashMap<String,String>>();
 
         try {
@@ -107,8 +107,8 @@ public class BusSearchFragment extends Fragment {
                 Object item = parent.getItemAtPosition(position);
                 HashMap<String , String> data = new HashMap<String, String>();
                 data = (HashMap<String , String>) item;
-                Intent intent = new Intent(MainActivity.ma.getBaseContext(), StationActivity.class);
-                intent.putExtra("stop-information", data);
+                Intent intent = new Intent(MainActivity.ma.getBaseContext(), BusInformationActivity.class);
+                intent.putExtra("bus-information", data);
                 startActivity(intent);
             }
         });

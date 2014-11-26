@@ -89,7 +89,6 @@ public class StationActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         new getStationInfo().execute(null, null, null);
-                        Toast.makeText(MainActivity.ma.getBaseContext(), "에러발생", Toast.LENGTH_SHORT).show();
                     }
                 });
 

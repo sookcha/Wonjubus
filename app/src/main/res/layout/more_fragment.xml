@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_centerInParent="true" android:id="@+id/morefragment">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:gravity="center"
+                  android:layout_toStartOf="@+id/busNumberText"
+                  android:id="@+id/linearLayout"
+                  android:layout_alignParentBottom="true"
+                  android:layout_marginBottom="269dp" android:layout_alignParentRight="true"
+                  android:layout_alignParentEnd="true">
+        <ImageView android:layout_width="85dp" android:layout_height="85dp" android:id="@+id/imageView"
+
+                   android:background="@drawable/wonjubus_icon"
+                   android:layout_toEndOf="@+id/linearLayout"
+                   android:layout_toStartOf="@+id/busNumberText"
+                   android:scaleType="centerInside"
+                   android:layout_alignRight="@+id/busNumberText"
+                   android:layout_alignEnd="@+id/busNumberText" android:layout_alignParentTop="true"
+                   android:layout_toRightOf="@+id/linearLayout"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WonjuBus"
+                  android:id="@+id/busNumberText" android:layout_gravity="center_horizontal" android:textSize="40dp"
+                  android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
+    </LinearLayout>
+    <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/aboutListView"
+            android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_marginTop="197dp" android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+</RelativeLayout>

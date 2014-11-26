@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sookcha.wonjubus" >
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -20,6 +21,10 @@
         <activity
             android:name="com.sookcha.wonjubus.StationActivity"
             android:label="@string/title_activity_station" >
+        </activity>
+        <activity
+            android:name="com.sookcha.wonjubus.BusInformationActivity"
+            android:label="@string/title_activity_bus_information" >
         </activity>
     </application>
 

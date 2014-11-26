@@ -46,12 +46,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
         ma=this;
 
-
-
         mFragments.add(new PlaceholderFragment());
         mFragments.add(new StationSearchFragment());
         mFragments.add(new BusSearchFragment());
-        mFragments.add(new SettingsFragment());
+        mFragments.add(new MoreFragment());
 
         setContentView(R.layout.activity_main);
 
@@ -126,6 +124,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     }
 
+    private static final int[] ICONS = new int[] {
+            R.drawable.ic_action_busstop,
+            R.drawable.ic_action_busstop,
+            R.drawable.ic_action_busstop,
+            R.drawable.ic_action_busstop,
+    };
+
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -136,6 +142,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
+
 
         @Override
         public Fragment getItem(int position) {
@@ -158,16 +166,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return "Favorites";
+                    return "즐겨찾기";
                 case 1:
-                    return "Station";
+                    return "정류장";
                 case 2:
-                    return "Bus";
+                    return "버스";
                 case 3:
-                    return "About";
+                    return "더보기";
             }
             return null;
         }
+
     }
 
     /**

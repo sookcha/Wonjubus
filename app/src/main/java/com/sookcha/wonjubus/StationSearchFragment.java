@@ -35,6 +35,7 @@ public class StationSearchFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     SimpleAdapter adapter;
+    TextView searchBox;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -54,7 +55,6 @@ public class StationSearchFragment extends Fragment {
     public static StationSearchFragment newInstance(int sectionNumber) {
         StationSearchFragment fragment = new StationSearchFragment();
         Bundle args = new Bundle();
-
         // = sectionNumber;
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -68,10 +68,11 @@ public class StationSearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.bus_search, container, false);
+        View rootView = inflater.inflate(R.layout.station_main, container, false);
 
-        ListView stationList = (ListView) rootView.findViewById(R.id.busListView);
-        final TextView searchBox = (TextView) rootView.findViewById(R.id.busSearchTextView);
+        ListView stationList = (ListView) rootView.findViewById(R.id.listView);
+        searchBox = (TextView) rootView.findViewById(R.id.editText);
+
         ArrayList<HashMap<String, String>> mapList = new ArrayList<HashMap<String,String>>();
 
         try {
