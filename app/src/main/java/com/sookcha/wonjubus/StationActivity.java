@@ -34,7 +34,6 @@ public class StationActivity extends Activity {
     String responseString;
     HttpResponse response;
     HashMap<String, String> map = new HashMap<String, String>();
-    ;
     ArrayList<HashMap<String, String>> mapList;
     SimpleAdapter adapter;
     SQLiteHelper db = new SQLiteHelper(this);

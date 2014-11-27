@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class BusSearchFragment extends Fragment {
 
     public String AssetJSONFile(String filename, Context context) throws IOException {
         AssetManager manager = context.getAssets();
-        InputStream file = getResources().openRawResource(R.raw.buslist);
+        InputStream file = new FileInputStream(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/buslist.json");
         byte[] formArray = new byte[file.available()];
         file.read(formArray);
         file.close();
@@ -77,7 +80,8 @@ public class BusSearchFragment extends Fragment {
 
         try {
             Context c = MainActivity.ma.getApplicationContext();
-            String jsonLocation = AssetJSONFile("res/buslist.json", c);
+
+            String jsonLocation = AssetJSONFile(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/buslist.json", c);
             JSONArray json = new JSONArray(jsonLocation);
 
             for(int i=0;i<json.length();i++){

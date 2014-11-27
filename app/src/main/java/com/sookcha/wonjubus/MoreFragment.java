@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+
+import static android.widget.AdapterView.*;
 
 
 /**
@@ -66,7 +69,7 @@ public class MoreFragment extends Fragment {
 
         ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> item;
-        String[] a = {"개발자 연락처", "me@sookcha.com", "버스 정보 출처", "http://its.wonju.go.kr", "데이터베이스 정보", "20141119", "참고사항", "이 어플리케이션은 원주시 교통정보센터에서 정보를 불러옵니다. 원주시 자체 시스템에 문제가 생길때가 간혹 있어 정보 로딩이 안되거나 오차가 생기는 등의 문제가 발생할 수 있습니다. 문의사항은 위의 메일로 언제든지 연락주세요."};
+        String[] a = {"개발자 연락처", "me@sookcha.com","공지사항","원주버스 공지사항","버스 정보 출처", "http://its.wonju.go.kr", "데이터베이스 정보", "20141119", "참고사항", "이 어플리케이션은 원주시 교통정보센터에서 정보를 불러옵니다. 원주시 자체 시스템에 문제가 생길때가 간혹 있어 정보 로딩이 안되거나 오차가 생기는 등의 문제가 발생할 수 있습니다. 문의사항은 위의 메일로 언제든지 연락주세요."};
 
 
 
@@ -81,6 +84,15 @@ public class MoreFragment extends Fragment {
         SimpleAdapter notes = new SimpleAdapter(MainActivity.ma.getApplicationContext(), list, R.layout.about_list_item, new String[] { "section", "content" }, listViewText);
 
         aboutList.setAdapter(notes);
+        aboutList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://wonjubusapp.tumblr.com"));
+                    startActivity(browserIntent);
+                }
+            }
+        });
 
         return rootView;
     }

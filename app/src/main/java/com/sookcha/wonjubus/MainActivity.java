@@ -1,13 +1,14 @@
 package com.sookcha.wonjubus;
 
+import java.io.File;
 import java.util.*;
 
-import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -85,6 +86,35 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
+        }
+        File file = new File(ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/buslist.json");
+        File busFile = new File(ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/stationlist.json");
+
+        if (!file.exists() || !busFile.exists()) {
+
+            String url = "https://gist.githubusercontent.com/sookcha/3a1c01ad1e8dfecfdca1/raw/buslist.json";
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+            String stationUrl = "https://gist.githubusercontent.com/sookcha/cb3a2d5a53b07ba40b4f/raw/stationlist.json";
+            DownloadManager.Request stationRequest = new DownloadManager.Request(Uri.parse(stationUrl));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            }
+
+            request.setTitle("원주버스 DB 다운로드");
+            request.setDescription("버스 정보 DB를 다운로드합니다");
+
+            stationRequest.setTitle("원주버스 DB 다운로드");
+            stationRequest.setDescription("정류장 정보 DB를 다운로드합니다");
+
+            request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "buslist.json");
+            stationRequest.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "stationlist.json");
+
+            DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+            manager.enqueue(request);
+            manager.enqueue(stationRequest);
         }
     }
 
@@ -168,27 +198,27 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                 case 0:
                     return "즐겨찾기";
                 case 1:
-                    return "정류장";
-                case 2:
-                    return "버스";
-                case 3:
-                    return "더보기";
+                        return "정류장";
+                    case 2:
+                        return "버스";
+                    case 3:
+                        return "더보기";
+                }
+                return null;
             }
-            return null;
+
         }
 
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
         /**
-         * The fragment argument representing the section number for this
-         * fragment.
+         * A placeholder fragment containing a simple view.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        public static class PlaceholderFragment extends Fragment {
+
+            /**
+             * The fragment argument representing the section number for this
+             * fragment.
+             */
+            private static final String ARG_SECTION_NUMBER = "section_number";
 
         /**
          * Returns a new instance of this fragment for the given section

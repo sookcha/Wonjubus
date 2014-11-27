@@ -25,6 +25,8 @@ public class BusInformationActivity extends Activity {
         TextView busNumber = (TextView) findViewById(R.id.busNumberText);
         busNumber.setText(hashMap.get("busNumber"));
 
+        getActionBar().setTitle("버스 정보");
+
         ListView busInfo = (ListView) findViewById(R.id.busInfoList);
         ArrayList mapList = new ArrayList<HashMap<String, String>>();
 
