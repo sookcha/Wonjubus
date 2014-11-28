@@ -1,11 +1,9 @@
 package com.sookcha.wonjubus;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -168,7 +167,7 @@ public class StationActivity extends Activity {
                 return super.onOptionsItemSelected(item);
             case R.id.action_locate:
                 Intent intent = new Intent(MainActivity.ma.getBaseContext(), LocateActivity.class);
-                //intent.putExtra("stop-information", data);
+                intent.putExtra("location", hashMap.get("location-lat") + "," + hashMap.get("location-lng"));
                 startActivity(intent);
 
                 return super.onOptionsItemSelected(item);

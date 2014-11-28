@@ -1,6 +1,7 @@
 package com.sookcha.wonjubus;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,15 +11,24 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
+
 
 public class LocateActivity extends Activity {
+    HashMap<String, String> hashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
+        getActionBar().setTitle("정류장 위치 정보");
+
+
+        Intent intent = getIntent();
+        String xy = intent.getStringExtra("location");
+
         GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        LatLng sydney = new LatLng(-33.867, 151.206);
+        LatLng sydney = new LatLng(Float.parseFloat(xy.split(",")[0]), Float.parseFloat(xy.split(",")[1]));
 
             map.setMyLocationEnabled(true);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
