@@ -162,12 +162,12 @@ public class StationActivity extends Activity {
 
                     db.addFavorite(new Favorites(text.getText().toString(),
                             Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")),
-                            stationNumber.getText().toString().split("-")[1], "0", "0"));
+                            stationNumber.getText().toString().split("-")[1], hashMap.get("location-lat"), hashMap.get("location-lng")));
                 }
                 return super.onOptionsItemSelected(item);
             case R.id.action_locate:
                 Intent intent = new Intent(MainActivity.ma.getBaseContext(), LocateActivity.class);
-                intent.putExtra("location", hashMap.get("location-lat") + "," + hashMap.get("location-lng"));
+                intent.putExtra("location", hashMap.get("location-lat") + "," + hashMap.get("location-lng") + "," + hashMap.get("stopName"));
                 startActivity(intent);
 
                 return super.onOptionsItemSelected(item);

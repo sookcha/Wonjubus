@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -101,6 +100,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 favorite.name = (cursor.getString(1));
                 favorite.number = Integer.parseInt(cursor.getString(2));
                 favorite.location = cursor.getString(3);
+                favorite.locationLAT = cursor.getString(4);
+                favorite.locationLNG = cursor.getString(5);
 
                 favorites.add(favorite);
                 } while (cursor.moveToNext());

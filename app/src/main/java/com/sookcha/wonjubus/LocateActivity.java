@@ -28,15 +28,15 @@ public class LocateActivity extends Activity {
         String xy = intent.getStringExtra("location");
 
         GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        LatLng sydney = new LatLng(Float.parseFloat(xy.split(",")[0]), Float.parseFloat(xy.split(",")[1]));
+        LatLng station = new LatLng(Float.parseFloat(xy.split(",")[0]), Float.parseFloat(xy.split(",")[1]));
 
-            map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+        map.setMyLocationEnabled(true);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(station, 17));
 
         map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney));
+                .title(xy.split(",")[2])
+                .snippet(null)
+                .position(station));
     }
 
 
@@ -53,11 +53,6 @@ public class LocateActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -245,14 +245,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     }
 
-    private static final int[] ICONS = new int[] {
-            R.drawable.ic_action_busstop,
-            R.drawable.ic_action_busstop,
-            R.drawable.ic_action_busstop,
-            R.drawable.ic_action_busstop,
-    };
-
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -341,10 +333,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                 map.put("stopName",  favList.get(i).name);
                 map.put("stopNumber", favList.get(i).number.toString());
                 map.put("location", favList.get(i).location);
-                /*
-                map.put("location-lat", map.get("LAT"));
-                map.put("location-lng", map.get("LNG"));
-                */
+                map.put("location-lat", favList.get(i).locationLAT);
+                map.put("location-lng", favList.get(i).locationLNG);
 
                 mapList.add(map);
             }
@@ -414,10 +404,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                 map.put("stopName",  favList.get(i).name);
                 map.put("stopNumber", favList.get(i).number.toString());
                 map.put("location", favList.get(i).location);
-                /*
-                map.put("location-lat", map.get("LAT"));
-                map.put("location-lng", map.get("LNG"));
-                */
+                map.put("location-lat", favList.get(i).locationLAT);
+                map.put("location-lng", favList.get(i).locationLNG);
+
 
                 mapList.add(map);
             }
