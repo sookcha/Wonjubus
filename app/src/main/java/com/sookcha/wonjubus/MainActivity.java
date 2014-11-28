@@ -1,12 +1,17 @@
 package com.sookcha.wonjubus;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -14,6 +19,11 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -23,6 +33,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     public static SimpleAdapter favoriteAdapter;
     public static ListView tv;
     public static ArrayList mapList;
+    String output;
 
 
     /**
@@ -89,14 +100,33 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
         File file = new File(ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/buslist.json");
         File busFile = new File(ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/stationlist.json");
-
         if (!file.exists() || !busFile.exists()) {
+            checkUpdate();
+        } else {
+            new checkUpdateTask().execute();
+        }
 
-            String url = "https://gist.githubusercontent.com/sookcha/3a1c01ad1e8dfecfdca1/raw/buslist.json";
+    }
+
+    public void checkUpdate() {
+        File versionFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/wonjubusversion.txt");
+        File stationFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/stationlist.json");
+        File busFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/buslist.json");
+
+        versionFile.delete();
+        stationFile.delete();
+        busFile.delete();
+
+
+
+        String url = "https://gist.githubusercontent.com/sookcha/3a1c01ad1e8dfecfdca1/raw/buslist.json";
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
             String stationUrl = "https://gist.githubusercontent.com/sookcha/cb3a2d5a53b07ba40b4f/raw/stationlist.json";
             DownloadManager.Request stationRequest = new DownloadManager.Request(Uri.parse(stationUrl));
+
+            String versionUrl = "https://gist.githubusercontent.com/sookcha/b4f5f94b319be003232a/raw/wonjubusversion.txt";
+            DownloadManager.Request versionRequest = new DownloadManager.Request(Uri.parse(versionUrl));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 request.allowScanningByMediaScanner();
@@ -109,14 +139,75 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
             stationRequest.setTitle("원주버스 DB 다운로드");
             stationRequest.setDescription("정류장 정보 DB를 다운로드합니다");
 
+            versionRequest.setTitle("원주버스 DB 다운로드");
+            versionRequest.setDescription("정류장 정보 DB를 다운로드합니다");
+
             request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "buslist.json");
             stationRequest.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "stationlist.json");
+            versionRequest.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "wonjubusversion.txt");
+
 
             DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
             manager.enqueue(request);
             manager.enqueue(stationRequest);
-        }
+            manager.enqueue(versionRequest);
     }
+
+    private class checkUpdateTask extends AsyncTask<URL, Integer, Integer> {
+        @Override
+        protected Integer doInBackground(URL... params) {
+            String versionUrl = "https://gist.githubusercontent.com/sookcha/b4f5f94b319be003232a/raw/wonjubusversion.txt";
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(versionUrl);
+
+            HttpResponse httpResponse = null;
+            try {
+                httpResponse = httpClient.execute(httpGet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            HttpEntity httpEntity = httpResponse.getEntity();
+            try {
+                output = EntityUtils.toString(httpEntity).toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+        }
+
+        protected void onPostExecute(Integer result) {
+            File file = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/wonjubusversion.txt");
+            StringBuilder text = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                }
+            }
+            catch (IOException e) {
+                //You'll need to add proper error handling here
+            }
+
+
+            Integer numberOutput = Integer.parseInt(output);
+            if (Integer.parseInt(text.toString().replace("\n","")) < numberOutput) {
+                checkUpdate();
+            }
+
+        }
+
+    }
+
+
+
 
 
     @Override
@@ -330,6 +421,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
                 mapList.add(map);
             }
+
             int[] listViewText={R.id.nameText};
 
             favoriteAdapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"stopName"},listViewText);

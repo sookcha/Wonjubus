@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,8 @@ public class StationActivity extends Activity {
     SimpleAdapter adapter;
     SQLiteHelper db = new SQLiteHelper(this);
     ProgressBar spinner;
+    TextView stopNumber;
+    MenuItem favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +50,12 @@ public class StationActivity extends Activity {
 
         getActionBar().setTitle("정류장 정보");
 
+
         Intent intent = getIntent();
         TextView stationName = (TextView) findViewById(R.id.stopName);
-        TextView stopNumber = (TextView) findViewById(R.id.stopNumber);
+        stopNumber = (TextView) findViewById(R.id.stopNumber);
         spinner = (ProgressBar) findViewById(R.id.progressBar2);
         spinner.setVisibility(View.GONE);
-
 
         hashMap = (HashMap<String, String>) intent.getSerializableExtra("stop-information");
         stationName.setText(hashMap.get("stopName"));
@@ -131,14 +134,15 @@ public class StationActivity extends Activity {
         }
     }
 
-    public void addToFavorites() {
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_station, menu);
+        favorite = menu.findItem(R.id.action_favorite);
+        if (db.isExist(Integer.parseInt(stopNumber.getText().toString().split("-")[0].replace(" ", "")))) {
+            favorite.setVisible(false);
+        }
+
 
         return true;
     }
