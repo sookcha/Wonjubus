@@ -9,7 +9,6 @@
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent"
                   android:gravity="center"
-                  android:layout_toStartOf="@+id/busNumberText"
                   android:id="@+id/linearLayout"
                   android:layout_alignParentBottom="true"
                   android:layout_marginBottom="269dp" android:layout_alignParentRight="true"

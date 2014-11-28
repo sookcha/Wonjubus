@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sookcha.wonjubus.StationActivity" >
+    <item android:id="@+id/action_locate"
+          android:title="위치"
+          android:icon="@drawable/ic_action_place"
+          android:showAsAction="ifRoom" />
+
     <item android:id="@+id/action_favorite"
-          android:title="Favorite"
+          android:title="즐겨찾기"
           android:icon="@drawable/ic_action_important"
           android:showAsAction="ifRoom" />
 </menu>

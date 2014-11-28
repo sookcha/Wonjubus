@@ -156,18 +156,24 @@ public class StationActivity extends Activity {
         TextView text = (TextView) findViewById(R.id.stopName);
         TextView stationNumber = (TextView) findViewById(R.id.stopNumber);
 
-        if (id == R.id.action_favorite) {
+        switch(id) {
+            case R.id.action_favorite:
+                if (!db.isExist(Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")))) {
+                    Toast.makeText(getBaseContext(), text.getText() + " 정류장이 즐겨찾기에 추가되었습니다", Toast.LENGTH_LONG).show();
 
-            if (!db.isExist(Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")))) {
-                Toast.makeText(getBaseContext(), text.getText() + " 정류장이 즐겨찾기에 추가되었습니다", Toast.LENGTH_LONG).show();
+                    db.addFavorite(new Favorites(text.getText().toString(),
+                            Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")),
+                            stationNumber.getText().toString().split("-")[1], "0", "0"));
+                }
+                return super.onOptionsItemSelected(item);
+            case R.id.action_locate:
+                Intent intent = new Intent(MainActivity.ma.getBaseContext(), LocateActivity.class);
+                //intent.putExtra("stop-information", data);
+                startActivity(intent);
 
-                db.addFavorite(new Favorites(text.getText().toString(),
-                        Integer.parseInt(stationNumber.getText().toString().split("-")[0].replace(" ", "")),
-                        stationNumber.getText().toString().split("-")[1], "0", "0"));
-            }
-
-            return super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(item);
         }
+
         return false;
     }
 }

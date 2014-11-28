@@ -1,29 +1,31 @@
 package com.sookcha.wonjubus;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.*;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -116,8 +118,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         versionFile.delete();
         stationFile.delete();
         busFile.delete();
-
-
 
         String url = "https://gist.githubusercontent.com/sookcha/3a1c01ad1e8dfecfdca1/raw/buslist.json";
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
