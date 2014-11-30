@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +38,7 @@ public class StationSearchFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    SimpleAdapter adapter;
+    public SimpleAdapter stationAdapter;
     TextView searchBox;
 
     /**
@@ -102,10 +104,9 @@ public class StationSearchFragment extends Fragment {
             e.printStackTrace();
         }
 
-        int[] listViewText={R.id.nameText};
-        adapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"stopName"},listViewText);
-        stationList.setAdapter(adapter);
+        stationAdapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"stopName"}, new int[]{R.id.nameText});
 
+        stationList.setAdapter(stationAdapter);
         stationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -127,8 +128,8 @@ public class StationSearchFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = searchBox.getText().toString().toLowerCase(Locale.getDefault());
-                adapter.getFilter().filter(text);
-                adapter.notifyDataSetChanged();
+                stationAdapter.getFilter().filter(text);
+                stationAdapter.notifyDataSetChanged();
 
             }
 

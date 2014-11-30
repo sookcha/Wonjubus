@@ -35,7 +35,7 @@ public class StationActivity extends Activity {
     HttpResponse response;
     HashMap<String, String> map = new HashMap<String, String>();
     ArrayList<HashMap<String, String>> mapList;
-    SimpleAdapter adapter;
+    private SimpleAdapter adapter;
     SQLiteHelper db = new SQLiteHelper(this);
     ProgressBar spinner;
     TextView stopNumber;

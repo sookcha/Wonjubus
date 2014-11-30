@@ -1,8 +1,10 @@
 package com.sookcha.wonjubus;
 
 import android.app.*;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -35,6 +38,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     public static SimpleAdapter favoriteAdapter;
     public static ListView tv;
     public static ArrayList mapList;
+    private int downloadCount = 0;
+
+    StationSearchFragment stationSearch = new StationSearchFragment();
+    BusSearchFragment busSearch = new BusSearchFragment();
+
     String output;
 
 
@@ -111,6 +119,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     }
 
     public void checkUpdate() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("DB 업데이트가 있습니다");
+        alert.setMessage("DB가 초기화되지 않았거나 새로운 업데이트가 있습니다. 현재 다운로드 중입니다. 잠시만 기다려주세요.");
+
+        alert.show();
         File versionFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/wonjubusversion.txt");
         File stationFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/stationlist.json");
         File busFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/buslist.json");
@@ -147,11 +161,37 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
             versionRequest.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, "wonjubusversion.txt");
 
 
-            DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-            manager.enqueue(request);
-            manager.enqueue(stationRequest);
-            manager.enqueue(versionRequest);
+        DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+
+        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        manager.enqueue(request);
+        manager.enqueue(stationRequest);
+        manager.enqueue(versionRequest);
+
+
     }
+
+    BroadcastReceiver onComplete=new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            File stationFile = new File(MainActivity.ma.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + "/stationlist.json");
+            if (stationFile.exists()) {
+                downloadCount++;
+                Toast.makeText(ma.getBaseContext(),String.valueOf(downloadCount),Toast.LENGTH_SHORT).show();
+
+                //long download_id = intent.getLongExtra("extra_download_id", 0);
+                if (downloadCount == 3) {
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+
+                }
+
+            }
+        }
+    };
+
 
     private class checkUpdateTask extends AsyncTask<URL, Integer, Integer> {
         @Override
@@ -205,10 +245,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
 
     }
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

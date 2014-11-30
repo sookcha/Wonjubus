@@ -1,31 +1,23 @@
 package com.sookcha.wonjubus;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
-import java.io.*;
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
-
-import static android.widget.AdapterView.*;
 
 
 /**
@@ -87,8 +79,6 @@ public class MoreFragment extends Fragment {
         }
 
         String[] a = {"개발자 연락처", "me@sookcha.com","공지사항","원주버스 공지사항","버스 정보 출처", "http://its.wonju.go.kr", "데이터베이스 정보", text.toString(), "참고사항", "이 어플리케이션은 원주시 교통정보센터에서 정보를 불러옵니다. 원주시 자체 시스템에 문제가 생길때가 간혹 있어 정보 로딩이 안되거나 오차가 생기는 등의 문제가 발생할 수 있습니다. 문의사항은 위의 메일로 언제든지 연락주세요."};
-
-
 
         for (int i = 0; i < a.length-1; i+=2) {
             item = new HashMap<String, String>();

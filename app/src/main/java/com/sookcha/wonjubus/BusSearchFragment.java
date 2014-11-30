@@ -19,7 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +37,7 @@ public class BusSearchFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    SimpleAdapter adapter;
+    public SimpleAdapter busAdapter;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -102,8 +101,8 @@ public class BusSearchFragment extends Fragment {
         }
 
         int[] listViewText={R.id.nameText};
-        adapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"busNumber"},listViewText);
-        stationList.setAdapter(adapter);
+        busAdapter = new SimpleAdapter(MainActivity.ma.getApplicationContext(),mapList,R.layout.bus_list_item,new String[]{"busNumber"},listViewText);
+        stationList.setAdapter(busAdapter);
 
         stationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -126,8 +125,8 @@ public class BusSearchFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String text = searchBox.getText().toString().toLowerCase(Locale.getDefault());
-                adapter.getFilter().filter(text);
-                adapter.notifyDataSetChanged();
+                busAdapter.getFilter().filter(text);
+                busAdapter.notifyDataSetChanged();
 
             }
 
