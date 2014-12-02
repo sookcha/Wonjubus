@@ -11,6 +11,7 @@
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:hint="버스 번호 검색..."
             android:id="@+id/busSearchTextView" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"/>
 
