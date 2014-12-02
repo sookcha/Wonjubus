@@ -1,16 +1,22 @@
 package com.sookcha.wonjubus;
 
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
+import com.android.vending.billing.IInAppBillingService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,6 +37,22 @@ public class MoreFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    MoreFragment fragment;
+
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -48,16 +70,29 @@ public class MoreFragment extends Fragment {
 
     public MoreFragment() {
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.more_fragment, container, false);
+
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        MainActivity.ma.getBaseContext().bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+        ArrayList<String> skuList = new ArrayList<String> ();
+        skuList.add("premiumUpgrade");
+        skuList.add("gas");
+        Bundle querySkus = new Bundle();
+        querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
+
+        Toast.makeText(MainActivity.ma.getBaseContext(),skuList.get(0),Toast.LENGTH_LONG).show();
+
         ListView aboutList = (ListView) rootView.findViewById(R.id.aboutListView);
         ArrayList<String> aboutLists = new ArrayList<String>();
         aboutLists.add("a");
-
 
         int[] listViewText={R.id.sectionText,R.id.contentText};
 
@@ -102,5 +137,13 @@ public class MoreFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mService != null) {
+            MainActivity.ma.getBaseContext().unbindService(mServiceConn);
+        }
     }
 }

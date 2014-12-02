@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_wonjubus" default="compile.module.wonjubus">
+  <dirname property="module.wonjubus.basedir" file="${ant.file.module_wonjubus}"/>
+  
+  <property name="module.jdk.home.wonjubus" value="${jdk.home.android_4.0.3_google_apis}"/>
+  <property name="module.jdk.bin.wonjubus" value="${jdk.bin.android_4.0.3_google_apis}"/>
+  <property name="module.jdk.classpath.wonjubus" value="jdk.classpath.android_4.0.3_google_apis"/>
+  
+  <property name="compiler.args.wonjubus" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="wonjubus.output.dir" value="${module.wonjubus.basedir}/build/classes/production/Wonjubus"/>
+  <property name="wonjubus.testoutput.dir" value="${module.wonjubus.basedir}/build/classes/test/Wonjubus"/>
+  
+  <path id="wonjubus.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="wonjubus.module.production.classpath">
+    <path refid="${module.jdk.classpath.wonjubus}"/>
+  </path>
+  
+  <path id="wonjubus.runtime.production.module.classpath">
+    <pathelement location="${wonjubus.output.dir}"/>
+  </path>
+  
+  <path id="wonjubus.module.classpath">
+    <path refid="${module.jdk.classpath.wonjubus}"/>
+    <pathelement location="${wonjubus.output.dir}"/>
+  </path>
+  
+  <path id="wonjubus.runtime.module.classpath">
+    <pathelement location="${wonjubus.testoutput.dir}"/>
+    <pathelement location="${wonjubus.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.wonjubus">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.wonjubus">
+    <patternset refid="compiler.excluded"/>
+    <patternset refid="excluded.from.module.wonjubus"/>
+  </patternset>
+  
+  
+  <target name="compile.module.wonjubus" depends="compile.module.wonjubus.production,compile.module.wonjubus.tests" description="Compile module Wonjubus"/>
+  
+  <target name="compile.module.wonjubus.production" depends="register.custom.compilers" description="Compile module Wonjubus; production classes"/>
+  
+  <target name="compile.module.wonjubus.tests" depends="register.custom.compilers,compile.module.wonjubus.production" description="compile module Wonjubus; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.wonjubus" description="cleanup module">
+    <delete dir="${wonjubus.output.dir}"/>
+    <delete dir="${wonjubus.testoutput.dir}"/>
+  </target>
+</project>
