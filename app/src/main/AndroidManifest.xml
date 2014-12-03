@@ -16,9 +16,11 @@
         android:theme="@style/AppTheme" >
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyB8mEX1xdBLeW9rjJz11EtcYsmhWFhTgAg"/>
         <meta-data android:name="com.google.android.gms.version" android:value="6171000" />
+        <!-- 광고를 노출할 Activity 에 android:configChanges=”orientation”을 반드시 추가해야 한다. -->
         <activity
             android:name="com.sookcha.wonjubus.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +39,12 @@
             android:name="com.sookcha.wonjubus.LocateActivity"
             android:label="@string/title_activity_locate" >
         </activity>
+        <!-- Interstitial 광고를 사용하기 위해서는 반드시 이 부분을 추가해야한다. -->
+        <activity
+                android:name="net.daum.adam.publisher.impl.AdInterstitialActivity"
+                android:configChanges="orientation|keyboardHidden"
+                android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

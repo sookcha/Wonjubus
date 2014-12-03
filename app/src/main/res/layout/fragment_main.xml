@@ -2,13 +2,22 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context=".MainActivity$PlaceholderFragment" android:weightSum="1">
 
     <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="390dp"
         android:id="@+id/favList" android:layout_marginTop="7dp" android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"/>
- />
+        android:layout_marginLeft="10dp" android:layout_weight="1"/>
+    <!-- 광고를 사용하기 위해서는 반드시 Client ID 를 발급받아 사용해야 한다. -->
+    <net.daum.adam.publisher.AdView
+            android:id="@+id/favoriteAdview"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            clientId="DAN-urrw22gnw4s5"
+            requestInterval="60"/>
+
 
 </LinearLayout>

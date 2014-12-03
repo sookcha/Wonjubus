@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import net.daum.adam.publisher.AdView;
+import net.daum.adam.publisher.impl.AdError;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -38,6 +41,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     public static ListView tv;
     public static ArrayList mapList;
     private int downloadCount = 0;
+
+    private static final String LOGTAG = "BannerTypeXML1";
+    private AdView adView = null;
 
     StationSearchFragment stationSearch = new StationSearchFragment();
     BusSearchFragment busSearch = new BusSearchFragment();
@@ -470,6 +476,70 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
             return rootView;
         }
+    }
+
+    private void initAdam() {
+        // AdFit(Ad@m) sdk 초기화 시작
+        adView = (AdView) findViewById(R.id.favoriteAdview);
+
+        // 광고 리스너 설정
+
+        // 1. 광고 클릭시 실행할 리스너
+        adView.setOnAdClickedListener(new AdView.OnAdClickedListener() {
+            @Override
+            public void OnAdClicked() {
+                Log.i(LOGTAG, "광고를 클릭했습니다.");
+            }
+        });
+
+        // 2. 광고 내려받기 실패했을 경우에 실행할 리스너
+        adView.setOnAdFailedListener(new AdView.OnAdFailedListener() {
+            @Override
+            public void OnAdFailed(AdError error, String message) {
+                Log.w(LOGTAG, message);
+            }
+        });
+
+        // 3. 광고를 정상적으로 내려받았을 경우에 실행할 리스너
+        adView.setOnAdLoadedListener(new AdView.OnAdLoadedListener() {
+            @Override
+            public void OnAdLoaded() {
+                Log.i(LOGTAG, "광고가 정상적으로 로딩되었습니다.");
+            }
+        });
+
+        // 4. 광고를 불러올때 실행할 리스너
+        adView.setOnAdWillLoadListener(new AdView.OnAdWillLoadListener() {
+            @Override
+            public void OnAdWillLoad(String url) {
+                Log.i(LOGTAG, "광고를 불러옵니다. : " + url);
+            }
+        });
+
+
+        // 5. 전면형 광고를 닫았을때 실행할 리스너
+        adView.setOnAdClosedListener(new AdView.OnAdClosedListener() {
+            @Override
+            public void OnAdClosed() {
+                Log.i(LOGTAG, "광고를 닫았습니다.");
+            }
+        });
+
+
+        // 할당 받은 clientId 설정
+        adView.setClientId("DAN-urrw22gnw4s5");
+
+
+        // 광고 갱신 주기를 12초로 설정
+        // adView.setRequestInterval(12);
+
+
+        // 광고 영역에 캐시 사용 여부 : 기본 값은 true
+        adView.setAdCache(false);
+
+        // Animation 효과 : 기본 값은 AnimationType.NONE
+        adView.setAnimationType(AdView.AnimationType.FLIP_HORIZONTAL);
+        adView.setVisibility(View.VISIBLE);
     }
 
 }
